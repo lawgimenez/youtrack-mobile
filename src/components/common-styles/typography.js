@@ -31,6 +31,10 @@ export const secondaryText = {
   letterSpacing: -0.17,
 };
 
+export const regularText = {
+  fontSize: MAIN_FONT_SIZE,
+};
+
 export const mainText = {
   fontSize: MAIN_FONT_SIZE,
   lineHeight: 20,

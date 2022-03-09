@@ -24,6 +24,7 @@ import type {Article} from 'flow/Article';
 import type {Attachment, ImageDimensions, IssueProject} from 'flow/CustomFields';
 import type {IssueFull} from 'flow/Issue';
 import type {MarkdownNode} from 'flow/Markdown';
+import type {TextStyle} from 'react-native';
 import type {UITheme} from 'flow/Theme';
 
 export type Mentions = {
@@ -52,6 +53,7 @@ function getMarkdownRules(
   uiTheme: UITheme,
   mentions?: Mentions,
   onCheckboxUpdate?: (checked: boolean, position: number) => void,
+  textStyle: TextStyle = {},
 ): Object {
 
   function renderVideo(youtubeVideoId: string, key: string): React$Element<typeof WebView> {
@@ -123,7 +125,7 @@ function getMarkdownRules(
         onPress={() => {
           Router.Issue({issueId: issueId.trim()});
         }}
-        style={styles}>
+        style={[styles, textStyle]}>
         {issueId}
       </Text>
     );
@@ -133,7 +135,7 @@ function getMarkdownRules(
     const text: string = node.content;
 
     if (mentions && mentions.articles.concat(mentions.issues).length > 0) {
-      return renderArticleMentions(node, mentions, uiTheme, style, inheritedStyles);
+      return renderArticleMentions(node, mentions, uiTheme, style, inheritedStyles, textStyle);
     }
 
     if (node.content.match(imageEmbedRegExp)) {
@@ -156,7 +158,7 @@ function getMarkdownRules(
         key={key}
         linkStyle={style.link}
         linkDefault={true}>
-        <Text selectable={true} style={[inheritedStyles, style.text]}>
+        <Text selectable={true} style={[inheritedStyles, style.text, textStyle]}>
           {txt}
         </Text>
       </Hyperlink>
@@ -167,7 +169,7 @@ function getMarkdownRules(
       if (matched[0] && typeof matched?.index === 'number') {
         const textWithoutIssueId: string = text.split(matched[0]).join('');
         return (
-          <Text selectable={true} key={`${node.key}`} style={[inheritedStyles, style.text]}>
+          <Text selectable={true} key={`${node.key}`} style={[inheritedStyles, style.text, textStyle]}>
             {renderHyperLink(textWithoutIssueId.slice(0, matched.index), `${node.key}0`)}
             {renderIssueIdLink(matched[0], [inheritedStyles, style.text, styles.link], `${node.key}1`)}
             {renderHyperLink(textWithoutIssueId.slice(matched.index, text.length - 1), `${node.key}2`)}
@@ -178,7 +180,7 @@ function getMarkdownRules(
     }
 
     return (
-      <Text key={node.key} style={[inheritedStyles, style.text]}>
+      <Text key={node.key} style={[inheritedStyles, style.text, textStyle]}>
         {text}
       </Text>
     );
@@ -213,7 +215,7 @@ function getMarkdownRules(
 
     code_inline: (node: MarkdownNode, children: Object, parent: Object, style: Object, inheritedStyles: Object = {}) => {
       return (
-        <Text selectable={true} key={node.key} style={[inheritedStyles, styles.inlineCode]}>
+        <Text selectable={true} key={node.key} style={[inheritedStyles, styles.inlineCode, textStyle]}>
           {node.content}
         </Text>
       );
@@ -233,7 +235,7 @@ function getMarkdownRules(
         <Text
           selectable={true}
           key={node.key}
-          style={[inheritedStyles, style.text, styles.link]}
+          style={[inheritedStyles, style.text, styles.link, textStyle]}
           onPress={() => Linking.openURL(node.attributes.href)}
         >
           {content}
@@ -282,7 +284,8 @@ function getMarkdownRules(
         children,
         parent,
         style,
-        inheritedStyles
+        inheritedStyles,
+        textStyle,
       ));
     },
 
@@ -302,7 +305,7 @@ function getMarkdownRules(
             color={uiTheme.colors.$icon}
             style={[styles.checkboxIcon, !isChecked && styles.checkboxIconBlank]}
           />
-          <Text selectable={true} style={[inheritedStyles, style.text, styles.checkboxLabel]}>
+          <Text selectable={true} style={[inheritedStyles, style.text, styles.checkboxLabel, textStyle]}>
             {issueId.test(text)
               ? renderIssueIdLink(text, [inheritedStyles, style.text, styles.link], node.key)
               : text}
@@ -323,7 +326,8 @@ function getMarkdownRules(
         children,
         parent,
         style,
-        inheritedStyles
+        inheritedStyles,
+        textStyle,
       ));
     },
   };
@@ -344,6 +348,7 @@ function renderArticleMentions(
   uiTheme: UITheme,
   style: Object,
   inheritedStyles: Object,
+  textStyle: TextStyle,
 ) {
   const PLAIN_TEXT_TYPE: string = '-=TEXT=-';
   const textData: Array<TextData> = [];
@@ -402,10 +407,10 @@ function renderArticleMentions(
       if (td.type !== PLAIN_TEXT_TYPE) {
         composed.push(
           <Text selectable={true} key={guid()}>
-            {textTokensToJoin.length > 0 && <Text selectable={true} style={style.text}>{`${textTokensToJoin.join(' ')} `}</Text>}
+            {textTokensToJoin.length > 0 && <Text selectable={true} style={[style.text, textStyle]}>{`${textTokensToJoin.join(' ')} `}</Text>}
             <Text
               selectable={true}
-              style={{color: uiTheme.colors.$link}}
+              style={[{color: uiTheme.colors.$link}, textStyle]}
               onPress={
                 () => (
                   td.type === ResourceTypes.ARTICLE
@@ -423,7 +428,7 @@ function renderArticleMentions(
       composed.push(
         <Text
           selectable={true}
-          style={[inheritedStyles, style.text]}
+          style={[inheritedStyles, style.text, textStyle]}
           key={guid()}
         >{textTokensToJoin.join(' ')}
         </Text>

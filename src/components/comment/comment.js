@@ -7,6 +7,7 @@ import React from 'react';
 import Avatar from '../avatar/avatar';
 import MarkdownView from '../wiki/markdown-view';
 import YoutrackWiki from '../wiki/youtrack-wiki';
+import {regularText} from '../common-styles/typography';
 import {relativeDate, getEntityPresentation} from '../issue-formatter/issue-formatter';
 
 import styles from './comment.styles';
@@ -88,6 +89,7 @@ function Comment(props: Props) {
     return (
       <MarkdownView
         testID="commentMarkdown"
+        textStyle={regularText}
         attachments={props.attachments}
         onCheckboxUpdate={(checked: boolean, position: number) => (
           props.onCheckboxUpdate && props.onCheckboxUpdate(checked, position)

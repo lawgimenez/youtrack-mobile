@@ -2,8 +2,10 @@
 
 import {Platform} from 'react-native';
 
-import {UNIT} from '../variables/variables';
 import {MAIN_FONT_SIZE, SECONDARY_FONT_SIZE} from '../common-styles/typography';
+import {UNIT} from '../variables/variables';
+
+import type {TextStyle} from 'react-native';
 import type {UITheme, UIThemeColors} from 'flow/Theme';
 
 
@@ -13,9 +15,10 @@ const vSpace = {
 };
 
 // Source: 'react-native-markdown-display/src/lib/styles'
-const markdownStyles = (uiTheme: UITheme) => {
+const markdownStyles = (uiTheme: UITheme, textStyle: ?TextStyle = {}) => {
   const uiThemeColors: UIThemeColors = uiTheme.colors;
   const code = {
+    fontSize: SECONDARY_FONT_SIZE,
     borderWidth: 0,
     backgroundColor: uiThemeColors.$boxBackground,
     padding: UNIT,
@@ -27,6 +30,7 @@ const markdownStyles = (uiTheme: UITheme) => {
     body: {
       color: uiThemeColors.$text,
       fontSize: SECONDARY_FONT_SIZE,
+      ...textStyle,
     },
 
     // Headings
@@ -194,8 +198,11 @@ const markdownStyles = (uiTheme: UITheme) => {
     // Text Output
     text: {
       color: uiThemeColors.$text,
+      ...textStyle,
     },
-    textgroup: {},
+    textgroup: {
+      ...textStyle,
+    },
     paragraph: {
       marginTop: UNIT,
       marginBottom: UNIT,

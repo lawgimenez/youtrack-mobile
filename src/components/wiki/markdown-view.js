@@ -18,6 +18,7 @@ import type {Attachment} from 'flow/CustomFields';
 import type {Folder} from 'flow/User';
 import type {Mentions} from './markdown-view-rules';
 import type {Theme} from 'flow/Theme';
+import type {TextStyle} from 'react-native';
 import type {ViewStyleProp} from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 
@@ -27,6 +28,7 @@ type Props = {
   children: string,
   mentions?: Mentions,
   onCheckboxUpdate?: (checked: boolean, position: number, md: string) => void,
+  textStyle?: TextStyle,
 };
 
 function MarkdownView(props: Props) {
@@ -48,9 +50,9 @@ function MarkdownView(props: Props) {
 
   return (
     <Markdown
-      style={markdownStyles(theme.uiTheme)}
+      style={markdownStyles(theme.uiTheme, props.textStyle)}
       markdownit={MarkdownItInstance}
-      rules={getMarkdownRules(attaches, projects, theme.uiTheme, mentions, onCheckBoxPress)}
+      rules={getMarkdownRules(attaches, projects, theme.uiTheme, mentions, onCheckBoxPress, props.textStyle)}
       ui
     >
       {children}

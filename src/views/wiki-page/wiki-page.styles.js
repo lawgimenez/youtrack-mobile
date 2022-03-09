@@ -1,6 +1,7 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
+
 import {UNIT} from 'components/variables/variables';
-import {headerTitle, monospace, SECONDARY_FONT_SIZE} from 'components/common-styles/typography';
+import {headerTitle, MAIN_FONT_SIZE, monospace} from 'components/common-styles/typography';
 
 
 export default EStyleSheet.create({
@@ -14,7 +15,7 @@ export default EStyleSheet.create({
   },
   plainText: {
     color: '$text',
-    fontSize: SECONDARY_FONT_SIZE,
+    fontSize: MAIN_FONT_SIZE,
     ...monospace,
   },
   icon: {
